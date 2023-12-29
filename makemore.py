@@ -13,12 +13,17 @@ for w in words:
     N[ix1, ix2] += 1
 
 g = torch.Generator().manual_seed(2147483647)
-for i in range(20):
+
+# P will be the normalized N, with probabilities for values
+
+P = N.float()
+P /= P.sum(1, keepdim=True)
+
+for i in range(5):
     ix = 0
     out = []
     while True:
-        p = N[ix].float()
-        p = p / p.sum()
+        p = P[ix]
         ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()
         out.append(itos[ix])
         # end token
